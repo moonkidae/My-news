@@ -2,9 +2,8 @@ name: Daily News Summarizer
 
 on:
   schedule:
-    # UTC 기준 23:00 = 한국 시간(KST) 매일 아침 8:00
-    - cron: '0 23 * * *'
-  workflow_dispatch: # 직접 실행(테스트) 버튼 활성화
+    - cron: '0 23 * * *' # KST 아침 8시
+  workflow_dispatch:
 
 jobs:
   run-news-bot:
@@ -14,21 +13,17 @@ jobs:
       - name: 코드 가져오기
         uses: actions/checkout@v4
 
-      - name: 파이썬 설치
+      - name: 파이썬 설정
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: 필요 패키지 설치
-        run: |
-          pip install google-genai feedparser
-
-      - name: 뉴스 수집 및 Gemini 요약 실행
+      - name: 뉴스 요약 실행
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python main.py
 
-      - name: 요약 결과 저장
+      - name: GitHub 저장소에 결과 파일 업데이트
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
