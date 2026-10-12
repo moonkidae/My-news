@@ -1,10 +1,9 @@
 import feedparser
-import google.generativeai as genai
+from google import genai
 import os
 
-# 1. API 키 설정 (2단계에서 입력한 보안 키를 자동으로 가져옵니다)
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model = genai.GenerativeModel('gemini-2.0-flash')
+# 1. 최신 Google GenAI 클라이언트 생성 (GEMINI_API_KEY 환경변수 자동 인식)
+client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 # 2. 뉴스 RSS 가져오기
 rss_urls = [
@@ -27,7 +26,11 @@ prompt = f"""
 정치, 경제, 사회 분야별 핵심 이슈를 각각 5개 이상 선정해서 한국어로 3줄 요약해줘.
 """
 
-response = model.generate_content(prompt)
+# 최신 Gemini 모델 호출
+response = client.models.generate_content(
+    model='gemini-2.5-flash',
+    contents=prompt
+)
 
 # 4. 요약 결과를 news_summary.txt 파일에 저장
 with open("news_summary.txt", "w", encoding="utf-8") as f:
