@@ -33,7 +33,7 @@ for url in rss_urls:
 
 print(f"수집된 헤드라인 수: {len(all_titles)}")
 
-# 2. Gemini API 호출 (외부 라이브러리 없이 HTTP 요청)
+# 2. Gemini API 호출 (올바른 모델명과 URL)
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     raise ValueError("GEMINI_API_KEY가 없습니다.")
@@ -45,7 +45,8 @@ prompt = f"""
 정치, 경제, 사회 분야별 핵심 이슈를 각각 5개 이상 선정해서 한국어로 3줄 요약해줘.
 """
 
-url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+# 구글 공식 Gemini 2.5 Flash REST API 엔드포인트
+url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
 headers = {'Content-Type': 'application/json'}
 payload = {
     "contents": [{
