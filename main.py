@@ -4,7 +4,7 @@ import json
 import xml.etree.ElementTree as ET
 import os
 
-# 1. RSS 뉴스 헤드라인 수집 함수
+# 1. RSS 뉴스 헤드라인 수집
 def get_rss_titles(url):
     titles = []
     try:
@@ -20,7 +20,6 @@ def get_rss_titles(url):
         print(f"RSS 수집 중 제외: {e}")
     return titles
 
-# RSS 주소
 rss_urls = [
     "https://www.yna.co.kr/rss/news.xml", # 연합뉴스
     "https://moxie.foxnews.com/google-publisher/latest.xml", # Fox News
@@ -33,10 +32,10 @@ for url in rss_urls:
 
 print(f"수집된 헤드라인 수: {len(all_titles)}")
 
-# 2. Gemini API 호출 (올바른 모델명과 URL)
+# 2. Gemini API 호출 (v1beta gemini-1.5-flash 엔드포인트)
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
-    raise ValueError("GEMINI_API_KEY가 없습니다.")
+    raise ValueError("GEMINI_API_KEY가 설정되지 않았습니다.")
 
 prompt = f"""
 다음은 오늘 주요 뉴스 헤드라인입니다:
@@ -45,8 +44,8 @@ prompt = f"""
 정치, 경제, 사회 분야별 핵심 이슈를 각각 5개 이상 선정해서 한국어로 3줄 요약해줘.
 """
 
-# 구글 공식 Gemini 2.5 Flash REST API 엔드포인트
-url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+# 구글 v1beta 표준 API URL
+url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
 headers = {'Content-Type': 'application/json'}
 payload = {
     "contents": [{
